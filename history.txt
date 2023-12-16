@@ -1,0 +1,90 @@
+17/12/2008. Version 1.2 beta 21:
+- Fixed reading LBA from and higher than 404850 in View Sectors and CD to Image.
+
+24/06/2007. Version 1.2 beta 20:
+- Added reading of C2 error pointers.
+- Fixed writing bug for SPT interface - this had prevented many writers from working, e.g. Pioneer.
+- Fixed writing to ignore sense error "UNIT NOT READY, LONG WRITE IN PROGRESS" (code: 02/04/08).
+- Added experimental writing raw DAO packed mode writing.
+
+v1.2 beta 19 (09 April 2007)
+- Fixed Error Recovery setting (all mode select commands were affected and are fixed).
+- Changed Sector Viewer "Deinterleave subch data" to "Group subch bits".
+- Display session nr. in TOC Viewer for full TOC mode.
+
+v1.2 beta 18 (26 Oct 2006)
+- Removed C2 offset correction when reading with subcode. Seems Premium didn't have a C2 offset to start with.
+
+v1.2 beta 17
+- Fixed ISRC reading bug - always reported not encoded on CD.
+- Fixed reading "Read Disc" in ASPI mode.
+- Fixed some bugs in error reporting.
+
+31/03/2005. Version 1.2 beta 11:
+- Beta 10 introduced a bug in the sending of main buffer data to drive, i.e. write and set error recovery commands did not work
+
+29/03/2005. Version 1.2 beta 10a:
+- Additions/changes
+- Communication interface selection added
+
+28/03/2005. Version 1.2 beta 10:
+- Fixed: In TOC viewer, with read cd mode on and changing from different TOC reading modes did not clear previous data
+- Fixed: (work around) windows 9x truncated form display (I believe it's a Delphi bug)
+- Added: 'read track info'
+- Added: 'read disc info'
+- Added: Win32 DeviceIOControl with SPT interface for NT4/2K/XP/2K3
+
+15/01/2004. Version 1.2 beta 9:
+- Fixed: Sector viewer display was shifted by 1 one.
+- Fixed: MSR option hanged - has now been fixed.  Also noticed that a spin up is required for measuring the beginning part of the CD - will try to implement this in next version.
+- Fixed: Buffer underrun still occurred - even though a secondary cache was implemented.  The reason/fix: Image to CD sent only 1 sector per MMC command.  Now it sends more than 1 at a time, which prevents buffer underrun on faster writing speeds.  Note the skipping of sectors will still have this problem - since it sends only 1 sector per MMC command (work around: write at 1-4x only).
+- Added: the option to use normal TOC (code 0000b) command to generate TOC file.  Some drives did not support the 'read Full TOC' command - which gives more complete data.
+- Added: In View Sectors, added column width and different display formats for viewing the sector data
+- Added: Added XP style.
+- Added: In View TOC, unchecking the Read MCD, Read ISRC and Read CD mode will not clear the data read.
+- Added: In View TOC, the ISRC are displayed as ASCII codes instead of as ASCII characters.
+- Added: In Image to CD, test write option is added - note this doesn't work for some Plextor drives in RAW DAO mode.
+
+01/10/2003. Version 1.2 beta 8:
+- Fixed: a bug not all drives were listed.
+- Fixed: recognising CD mode format of tracks.
+- Fixed: generating single 2448 byte image file.
+- Fixed: In 'CD To Image' the lead-in size produced a file that was smaller than what you entered, i.e. less 150 sectors.  This was okay before, because I gave wrong instructions on how to calculate lead-in size!  This has been fixed now.
+- Added: a cyclic secondary buffer - this should now allow you to write at higher than 8x speed without buffer underrun.  At the moment it uses a default of 1/7 of total physical system RAM.
+- Added: 2 extra features in to sector viewer: De-interlace sub-ch and yellow book scrambling options.
+- Added: icon made by Sam donated to me from cdfreaks forum - thanks.
+- Added: calculation of set pregap 1 to be written at LBA 0 in 'Image To CD'.
+- Added: 'Read ATIP' in 'CD To Image' which calculates the lead-in length for a blank CDR/W.
+- Added: CD mode 1 for lead-in generation into 'CD To Image'.
+- Added: In 'ATIP' the buffer is now zeroed so that pressed CDs will show zeroed info, which makes more sense.  Some drives actually reported back with no error on pressed CDs when issuing the ATIP command.
+- Added: Changed the way the program uses the MMC select10/sense10 commands - maybe more drives are supported now - haven't tested on stubborn drives.
+- Added: Changed .LI1 and .LI2 extensions to more appropriate ones .LI and .PG1 respectively.
+- Added: The generated .LO file now includes 2s of P sub-ch set to 0 at the start - in accordance with yellow book.
+- Added: Added a newer way to skip sector positions.
+
+28/05/2003. Version 1.2 beta 5:
+- Added: some minor extra features - not enough to make a new version.  Added ability to specify starting position (expressed in LBA) when writing data to CD.  In 'Image To CD' the lead-in type for TOC is changed to more appropriate name and also added an extra item.
+
+14/05/2003. Version 1.2 beta 4:
+- Fixed: a bug from previous version:  Unable to write image to CD.
+
+15/03/2003. Version 1.2 beta 3:
+- Added: experimental generation of full lead-in TOC, lead-in pregap (first pregap of CD) and lead-out files - all of which also has generated headers and CRC/EDC/ECC if format is CDROM, lead-in sub-channels will be generated from TOC info read from CD and have CRC calculated
+- Fixed: I think I've fixed the past the writing of 90:00:00 bug - still need more testing
+- Fixed: SSP skipping sector bug.  The skip length for lead-in should now be positive values now
+- Changed: .LED/.FLD extensions to .TU/TR
+- Todo: Still no support for multi-session CDs - file generation will not work properly with this format - so don't use I didn't do much testing on this version so the above may not be correct.  Also I rushed a bit to bring this version out (still, It took me 2 weeks of work!) unused variables and copying and pasting of code were left in so file size is a little bit larger than usual.
+
+16/12/2002. Version 1.2 beta 2:
+- Fixed: bug of not using SSP file
+- Added: measuring of sector reads/seeks (unit is recorded in micro seconds)
+
+24/11/2002. Version 1.2:
+- Fixed: bug of 'error missing file' when opening image files
+- Added: skip sector position file
+
+Version 1.1:
+- First release.  Implemented reading of sectors, TOC, CD to image and image to CD (writing) features.  The writing feature is not fully tested - I don't have much time to do extensive tests.  I have only tested it with writing audio CDs with DVD Toshiba SD-M1502 as reader and Plextor W8432T and LiteOn 24102B for burning.  Some features I didn't have time to put in: it can't handle multi-session CDs yet test unit command isn't implemented yet (you'll get unit is busy error messages etc, just keep retrying) load/eject disk info making an image of CD will stop if a read error is found - next version will have replace sector with another sector and continue reading audio read speed is not yet implemented writing buffer is only 64K bytes - I definitely need to implement a secondary buffer where users can set the amount to use Image to CD does not filter writers and the list goes on
+
+Version 1.0:
+- Only reading of sectors and TOC viewing.  Not released to public since I made better version 1.1.
